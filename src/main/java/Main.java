@@ -14,13 +14,15 @@ public class Main {
         Socket clientSocket = serverSocket.accept(); // ждем подключения
         System.out.println("New connection accepted");
 
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            System.out.println("Output stream created");
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            System.out.println("Input stream created");
-
-        final String name = in.readLine();
-        out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)){
+                System.out.println("Output stream created");
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                System.out.println("Input stream created");
+                final String name = in.readLine();
+                out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -10,12 +10,16 @@ public class Client {
     public static void main(String[] args) {
         int port = 9256;
 
-        try (Socket clientSocket = new Socket (InetAddress.getLocalHost(), port)) {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out.println("GET / HTTP/1.1\n" +"Host: netology.ru\n\n\n");
-            String resp = in.readLine();
-            System.out.println(resp);
+        try (Socket clientSocket = new Socket(InetAddress.getLocalHost(), port)) {
+
+            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out.println("GET / HTTP/1.1\n" + "Host: netology.ru\n\n\n");
+                String resp = in.readLine();
+                System.out.println(resp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
