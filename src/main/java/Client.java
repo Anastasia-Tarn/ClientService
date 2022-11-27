@@ -5,25 +5,29 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+
+
+
 public class Client {
 
     public static void main(String[] args) {
-        int port = 9256;
 
-        try (Socket clientSocket = new Socket(InetAddress.getLocalHost(), port)) {
+        String host = "127.0.0.1";
 
-            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out.println("GET / HTTP/1.1\n" + "Host: netology.ru\n\n\n");
-                String resp = in.readLine();
-                System.out.println(resp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try (Socket clientSocket = new Socket(host,9256);
+             BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
+            String name = br.readLine();
+            out.println(name+"\n" + "Host: netology.ru\n\n\n");
+            out.flush();
+
+            String resp = in.readLine();
+            System.out.println(resp);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
+        
     }
 }

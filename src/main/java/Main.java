@@ -7,26 +7,25 @@ import java.net.Socket;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        int port = 9256;
-        try (ServerSocket serverSocket = new ServerSocket(port)) { // порт можете выбрать любой в доступном диапазоне 0-65536. Но чтобы не нарваться на уже занятый - рекомендуем использовать около 8080
-        Socket clientSocket = serverSocket.accept(); // ждем подключения
-        System.out.println("New connection accepted");
 
-            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)){
-                System.out.println("Output stream created");
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                System.out.println("Input stream created");
-                final String name = in.readLine();
-                out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try (ServerSocket server = new ServerSocket(9256)) { // порт можете выбрать любой в доступном диапазоне 0-65536. Но чтобы не нарваться на уже занятый - рекомендуем использовать около 8080
+            System.out.println("Сервер запущен!");
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                try (Socket clientSocket = server.accept(); // ждем подключения
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+
+                    final String name = in.readLine();
+                    out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+                    out.flush();
+
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
         }
-
     }
 }
